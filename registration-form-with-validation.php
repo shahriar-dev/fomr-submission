@@ -1,3 +1,80 @@
+<?php
+$FirstNameError = "";
+$LastNameError = "";
+$GenderError = "";
+$DoBError = "";
+$ReligionError = "";
+$EmailError = "";
+$UsernameError = "";
+$PasswordError = "";
+
+$FirstName = "";
+$LastName = "";
+$Gender = "";
+$Religion = "";
+$Email = "";
+$Username = "";
+$Password = "";
+$DoB = "";
+$flag = 0;
+
+if ($_SERVER['REQUEST_METHOD'] === "POST") {
+    if (isset($_POST['submit'])) {
+if (empty($_POST['firstName'])) {
+    $FirstNameError = "First Name is Required!";
+    $flag = 1;
+}
+if (empty($_POST['lastName'])) {
+    $LastNameError = "Last Name is Required!";
+    flag = 1;
+} 
+if ($flag == 1) {
+    $FirstName = Test_User_Input($_POST['firstName']);        
+    $LastName = Test_User_Input($_POST['lastName']);
+    if(!preg_match("/^[A-Za-z. ]*$/", $FirstName)) {
+        $FirstNameError = "Only Letters and White Spaces are Allowed!";
+    }            
+    if(!preg_match("/^[A-Za-z. ]*$/", $LastName)) {
+        $LastNameError = "Only Letters and White Spaces are Allowed!";
+    }        
+}
+
+        if(empty($_POST['gender'])) {
+            $GenderError = "Gender is Required!";
+        } else {
+            $Gender = Test_User_Input($_POST['gender']);
+        }
+
+        if(empty($_POST['dob'])) {
+            $DoBError = "Date of Birth Required!";
+        } else {
+            $DoB = Test_User_Input($_POST['dob']);
+        }
+        
+        if(empty($_POST['religion']) || Test_User_Input($_POST['religion']) == "None") {
+            $ReligionError = "Religion Required!";
+        } else {
+            $Religion = Test_User_Input($_POST['religion']);
+        }
+
+        if (empty($_POST['email'])) {
+            $EmailError = "Email is Required!";
+        } else {
+            $Email = Test_User_Input($_POST['email']);
+            if (!preg_match("/[a-zA-Z0-9._]{3,}@[a-zA-Z0-9._]{3,}[.]{1}[a-zA-Z0-9._]{2,}/", $Email)) {
+                $EmailError = "Invalid Format";
+            }
+        }
+    }
+}
+
+function Test_User_Input($Data)
+{
+    return trim(htmlspecialchars(stripslashes($Data)));
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -19,23 +96,27 @@
 
                 <p>
                     <label for="input_firstname">First Name:</label>
-                    <input type="text" id="input_firstname" placeholder="First Name" name="firstName" required>
+                    <input type="text" id="input_firstname" placeholder="First Name" name="firstName">
+                    <span><label for="input_firstNameError" style="color: red;"><?php echo $FirstNameError ?></label></span>
                 </p>
 
                 <p>
                     <label for="input_lastname">Last Name:</label>
-                    <input type="text" id="input_lastname" placeholder="Last Name" name="lastName" required>
+                    <input type="text" id="input_lastname" placeholder="Last Name" name="lastName">
+                    <span><label for="input_lastNameError" style="color: red;"><?php echo $LastNameError ?></label></span>
                 </p>
 
                 <p>
                     <label for="gender_option">Gender</label>
                     <input type="radio" id="gender_option" name="gender" value="Male">Male</input>
                     <input type="radio" id="gender_option" name="gender" value="Female">Female</input>
+                    <span><label for="input_genderError" style="color: red;"><?php echo $GenderError ?></label></span>
                 </p>
 
                 <p>
                     <label for="input_dob">Date of Birth:</label>
-                    <input type="date" id="input_dob" name="dob" required>
+                    <input type="date" id="input_dob" name="dob">
+                    <span><label for="input_dobError" style="color: red;"><?php echo $DoBError ?></label></span>
                 </p>
 
                 <p>
@@ -46,6 +127,7 @@
                         <option>Hindu</option>
                         <option>Christian</option>
                     </select>
+                    <span><label for="select_religionError" style="color: red;"><?php echo $ReligionError ?></label></span>
                 </p>
             </fieldset>
 
@@ -73,7 +155,7 @@
 
                 <p>
                     <label for="input_email">Email:</label>
-                    <input type="email" id="input_email" placeholder="something@domain.com" name="email" required>
+                    <input type="email" id="input_email" placeholder="something@domain.com" name="email">
                 </p>
 
                 <p>
@@ -87,18 +169,18 @@
 
                 <p>
                     <span><label for="input_username">Username:</label></span>
-                    <span><input type="text" id="input_username" placeholder="Username" name="username" required></span>
+                    <span><input type="text" id="input_username" placeholder="Username" name="username"></span>
                 </p>
 
                 <p>
                     <span><label for="input_username">Username:</label></span>
-                    <span><input type="password" id="input_password" placeholder="Password" name="password" required></span>
+                    <span><input type="password" id="input_password" placeholder="Password" name="password"></span>
                 </p>
 
             </fieldset>
 
             <p>
-                <input type="submit"> &nbsp;&nbsp;
+                <input type="submit" name="submit"> &nbsp;&nbsp;
                 <input type="reset" value="Clear Form">
             </p>
 
