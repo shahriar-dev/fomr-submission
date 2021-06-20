@@ -26,9 +26,9 @@ if (empty($_POST['firstName'])) {
 }
 if (empty($_POST['lastName'])) {
     $LastNameError = "Last Name is Required!";
-    flag = 1;
+    $flag = 1;
 } 
-if ($flag == 1) {
+if ($flag == 0) {
     $FirstName = Test_User_Input($_POST['firstName']);        
     $LastName = Test_User_Input($_POST['lastName']);
     if(!preg_match("/^[A-Za-z. ]*$/", $FirstName)) {
@@ -39,11 +39,11 @@ if ($flag == 1) {
     }        
 }
 
-        if(empty($_POST['gender'])) {
-            $GenderError = "Gender is Required!";
-        } else {
-            $Gender = Test_User_Input($_POST['gender']);
-        }
+if(empty($_POST['gender'])) {
+    $GenderError = "Gender is Required!";
+} else {
+    $Gender = Test_User_Input($_POST['gender']);
+}
 
         if(empty($_POST['dob'])) {
             $DoBError = "Date of Birth Required!";
@@ -63,6 +63,32 @@ if ($flag == 1) {
             $Email = Test_User_Input($_POST['email']);
             if (!preg_match("/[a-zA-Z0-9._]{3,}@[a-zA-Z0-9._]{3,}[.]{1}[a-zA-Z0-9._]{2,}/", $Email)) {
                 $EmailError = "Invalid Format";
+            }
+        }
+
+        if(empty($_POST['username'])) {
+            $UsernameError = "Username REQUIRED!";
+        }
+        else {
+            $Username = Test_User_Input($_POST['username']);
+
+            if(!preg_match("/^[A-Za-z0-9. ]*$/", $Username)) {
+                $UsernameError = "Only Number and lowercase, Uppercase Letter are Allowed!";
+            }
+        }
+
+        if(empty($_POST['password'])) {
+            $PasswordError = "You must Enter a Password!";
+        }
+        else {
+            $Password = Test_User_Input($_POST['password']);
+
+            $UpperCase = preg_match("@[A-Z]@", $Password);
+            $LowerCase = preg_match("@[a-z]@", $Password);
+            $Number = preg_match("@[0-9]@", $Password);
+
+            if(!$UpperCase || !$LowerCase || !$Number) {
+                $PasswordError = "Password must contain 1 UPPERCASE, 1 LOWERCASE and 1 NUMBER";
             }
         }
     }
@@ -156,6 +182,7 @@ function Test_User_Input($Data)
                 <p>
                     <label for="input_email">Email:</label>
                     <input type="email" id="input_email" placeholder="something@domain.com" name="email">
+                    <span><label for="input_emailerror" style= "color: red"><?php echo $EmailError; ?></label></span>
                 </p>
 
                 <p>
@@ -170,11 +197,13 @@ function Test_User_Input($Data)
                 <p>
                     <span><label for="input_username">Username:</label></span>
                     <span><input type="text" id="input_username" placeholder="Username" name="username"></span>
+                    <span><label for="input_usernameerror" style ="color: red"><?php echo $UsernameError; ?></label></span>
                 </p>
 
                 <p>
-                    <span><label for="input_username">Username:</label></span>
+                    <span><label for="input_password">Password:</label></span>
                     <span><input type="password" id="input_password" placeholder="Password" name="password"></span>
+                    <span><label for="input_passworderror" style="color: red"><?php echo $PasswordError; ?></label></span>
                 </p>
 
             </fieldset>
